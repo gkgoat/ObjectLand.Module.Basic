@@ -1,12 +1,12 @@
 
 
 export default class ExpressionEvaluator {
-    evaluate(expr, runtime) {
+    async evaluate(expr, runtime) {
         this.runtime = runtime;
-        return this._evaluateNode(expr);
+        return await this._evaluateNode(expr);
     }
 
-    _evaluateNode(node) {
+    async _evaluateNode(node) {
         if (!node) return undefined;
 
         else if (node.type == 4 || // Deciaml Number
@@ -22,15 +22,15 @@ export default class ExpressionEvaluator {
             var op_fn = this.runtime.operators.get_uniary(node.operator);
 
             if (op_fn)
-                return op_fn(this._evaluateNode(node.argument))
+                return op_fn(await this._evaluateNode(node.argument))
             else
                 throw `Invalid Operator ${node.operator}`
         }
 
         // Binary Operators
         else if (node.is_binary) {
-            var left = this._evaluateNode(node.left);
-            var right = this._evaluateNode(node.right);
+            var left = await this._evaluateNode(node.left);
+            var right = await this._evaluateNode(node.right);
             var op_fn = this.runtime.operators.get_binary(node.operator);
 
             if (op_fn)
@@ -44,7 +44,7 @@ export default class ExpressionEvaluator {
         else if (node.is_array) {
             var arr = [];
             for (var el of node.object) {
-                arr.push(this._evaluateNode(el));
+                arr.push(await this._evaluateNode(el));
             }
             return arr;
         }
@@ -57,7 +57,7 @@ export default class ExpressionEvaluator {
         // array index
         else if (node.type == 15) {
             var variable = this.runtime.var_manager.get(node.object.text);
-            var index = this._evaluateNode(node.property);
+            var index = await this._evaluateNode(node.property);
             if (variable) {
                 return variable.val[index];
             }
@@ -72,7 +72,7 @@ export default class ExpressionEvaluator {
             var fn_args = Array.isArray(node.property) ? node.property : [node.property];
             var args = [];
             for (var arg of fn_args) {
-                args.push(this._evaluateNode(arg));
+                args.push(await this._evaluateNode(arg));
             }
 
             if (fn) {

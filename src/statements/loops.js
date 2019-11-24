@@ -1,5 +1,5 @@
 export class ForStatement {
-    execute(statement, runtime, index) {
+    async execute(statement, runtime, index) {
         var ident = statement.params.ident;
         var start = runtime.expr_evaluator.evaluate(statement.params.start, runtime)
         var end = runtime.expr_evaluator.evaluate(statement.params.end, runtime)
@@ -22,7 +22,7 @@ export class NextStatement {
         this.terminal = terminal;
     }
 
-    execute(statement, runtime) {
+    async execute(statement, runtime) {
         var loop = runtime.loop_man.getLastLoop('for');
         var next = runtime.var_manager.get(loop.params.ident) + loop.params.step;
         runtime.var_manager.register(loop.params.ident, next);
@@ -34,7 +34,7 @@ export class NextStatement {
 
 
 export class WhileStatement {
-    execute(statement, runtime, index) {
+    async execute(statement, runtime, index) {
         var cond = Array.isArray(statement.params)
             ? statement.params[0] : statement.params;
         
@@ -45,7 +45,7 @@ export class WhileStatement {
 }
 
 export class WendStatement {
-    execute(statement, runtime, index) {
+    async execute(statement, runtime, index) {
         var cond = Array.isArray(statement.params)
             ? statement.params[0] : statement.params;
         

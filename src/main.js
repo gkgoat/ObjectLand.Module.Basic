@@ -12,8 +12,8 @@ class Easybasic{
         this.runtime = new Runtime(this.statements, this.operators);
     }
 
-    execute(code){
-        this.terminal.clear();
+    async execute(code){
+        await this.terminal.clear();
         this.runtime.execute(code);
     }
 

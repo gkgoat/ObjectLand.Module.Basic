@@ -8,7 +8,7 @@ export class LetStatement {
         }
     }
 
-    execute(statement, runtime) {
+    async execute(statement, runtime) {
         var ident = statement.params.ident;
         var val = runtime.expr_evaluator.evaluate(statement.params.val, runtime)
         var var_type = this.type_dict[typeof val];

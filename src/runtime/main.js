@@ -17,24 +17,24 @@ export default class Runtime {
         this.loop_man = new LoopManager();
     }
 
-    execute(code) {
+    async execute(code) {
         var tree = this.parser.parse(code);
         console.log(tree);
 
         var i = 0;
         while (i < tree.length) {
-            i = this._executeStatement(tree[i], i);
+            i = await this._executeStatement(tree[i], i);
         }
     }
 
-    _executeStatement(statement, index) {
+    async _executeStatement(statement, index) {
         var next;
         var interpreter = this.statements.get(statement.statement);
 
         if (!interpreter) {
             throw `Statement ${statement.statement} not registered`;
         }
-        next = interpreter.execute(statement, this, index);
+        next = await interpreter.execute(statement, this, index);
 
         if(next)
             return next;
